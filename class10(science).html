@@ -61,20 +61,22 @@ nav a:hover{color:#ffd700;text-decoration: underline;}
 
 /* ---------------- Subjects Section ---------------- */
 .subjects-section{padding:60px 20px;text-align:center;}
-.subjects-section h2{font-size:2.5rem;color:#ffa700;margin-bottom:40px;}
+.subjects-section h2{font-size:2.5rem;color:#ff7a00;margin-bottom:40px;}
 .subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;}
 .subject-card{
   background:#fff;padding:30px 20px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.1);
   text-align:center;transition:0.4s;cursor:pointer;border-top:6px solid #ff7a00;position:relative;overflow:hidden;
 }
 .subject-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(0,0,0,0.15);}
-.subject-card h3{font-size:1.5rem;color:#555;margin-bottom:10px;}
+.subject-card h3{font-size:1.5rem;color:#333;margin-bottom:10px;}
 .subject-card p{font-size:1rem;color:#555;}
 .subject-card::after{content:'';position:absolute;width:60px;height:60px;background:#ffb600;top:-30px;right:-30px;border-radius:50%;opacity:0.3;}
 
-
-.text{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#ffb700;color:#fff;border:none;padding:10px 39px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer;margin:5px;transition:0.3s, transform 0.3s;margin-top:3%;}
+.view{display:flex;flex-direction:row;justify-content:center;align-items:center;text-align:center;background:#ffb700;color:#fff;border:none;padding:10px 39px;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;margin:5px;transition:0.3s, transform 0.3s;margin-top:3%;}
+.view:hover{background:#865000;transform:scale(1.05);}
+.text{display:flex;flex-direction:row;justify-content:center;align-items:center;text-align:center;background:#ffb700;color:#fff;border:none;padding:10px 19px;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;margin:5px;transition:0.3s, transform 0.3s;margin-top:3%;}
 .text:hover{background:#865000;transform:scale(1.05);}
+.ud {display:flex;justify-content:center;align-items:center;}
 
 /* ---------------- Footer ---------------- */
 footer{
@@ -129,7 +131,7 @@ footer a:hover{color:#fff;}
     <h1>Ganapati Tutorials</h1>
   </div>
   <nav id="nav-links">
-    <a href="class10.html">Back</a>
+    <a href="class9.html">Back</a>
     <a href="index.html">Home</a>
     <a href="#subjects">Topics</a>
     <a href="#contact">Contact</a>
@@ -139,8 +141,8 @@ footer a:hover{color:#fff;}
 
 <!-- Hero Section -->
 <section class="hero">
-  <h2>Class 10 - Easy Notes</h2>
-  <p>Select a subject below to access notes and resources for Class 10.</p>
+  <h2>Class 10 Science Notes</h2>
+  <p>Click “View” to open or "Upload" to insert or “Download” to save.</p>
 </section>
 
 <!-- Subjects Section -->
@@ -148,29 +150,59 @@ footer a:hover{color:#fff;}
   <h2>Topics</h2>
   <div class="subjects">
     <div class="subject-card">
-      <h3>Science</h3>
-      <center><button class="text">View</button>
-      <button class="text">Download</button></center>
+      <h3>୧. ଆମ ଚତୁଃପାର୍ଶ୍ଵରେ ଥିବା ପଦାର୍ଥ</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 1(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 1(class10).pdf')">📥Download</button></div>
+</div>
     </div>
     <div class="subject-card">
-      <h3>Mathematics</h3>
-      <center><button class="text">View</button>
-      <button class="text">Download</button></center>
+      <h3>୨. ଆମ ଚାରିପାଖରେ ଥିବା ପଦାର୍ଥ ବିଶୁଦ୍ଧ କି ?</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 2(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 2(class10).pdf')">📥Download</button></div>
     </div>
     <div class="subject-card">
-      <h3>English</h3>
-      <center><button class="text">View</button>
-      <button class="text">Download</button></center>
+      <h3>୩. ପରମାଣୁ ଓ ଅଣୁ</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 3(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 3(class10).pdf')">📥Download</button></div>
     </div>
     <div class="subject-card">
-      <h3>Odia</h3>
-      <center><button class="text">View</button>
-      <button class="text">Download</button></center>
+      <h3>୪. ପରମାଣୁ ଗଠନ</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 4(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text"onclick="openPDF('Science Notes Chapter - 4(class10).pdf')">📥Download</button></div>
     </div>
     <div class="subject-card">
-      <h3>Social Science</h3>
-      <center><button class="text">View</button>
-      <button class="text">Download</button></center>
+      <h3>୫. ଗତି</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 5(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 5(class10).pdf')">📥Download</button></div>
+    </div>
+        <div class="subject-card">
+      <h3>୬. ବଳ ଓ ଗତି ନିୟମ</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 6(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 6(class10).pdf')">📥Download</button></div>
+    </div>
+        <div class="subject-card">
+      <h3>୭. ମହାକର୍ଷଣ</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 7(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 7(class10).pdf')">📥Download</button></div>
+    </div>
+        <div class="subject-card">
+      <h3>୮. କାର୍ଯ୍ୟ ଓ ଶକ୍ତି</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 8(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 8(class10).pdf')">📥Download</button></div>
+    </div>
+        <div class="subject-card">
+      <h3>୯. ଧ୍ୱନି</h3>
+      <center><button class="view" onclick="openPDF('Science Notes Chapter - 9(class10).pdf')">View</button></center>
+      <div class="ud"><button class="text">📤Upload</button>
+      <button class="text" onclick="openPDF('Science Notes Chapter - 9(class10).pdf')">📥Download</button></div>
     </div>
   </div>
 </section>
@@ -224,6 +256,7 @@ hamburger.addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
