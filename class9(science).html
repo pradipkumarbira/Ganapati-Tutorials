@@ -279,28 +279,41 @@ hamburger.addEventListener('click',()=>{
     link.click();
   }
 
-  function uploadFile(filename){
-  const password = prompt("Enter upload password:");
-  if(!password) return;
+  const dotenv = require('dotenv');
+dotenv.config();
 
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.onchange = () => {
-    const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
-    formData.append('password', password);
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
 
-    fetch('/upload', { method:'POST', body: formData })
-      .then(res => res.text())
-      .then(msg => alert(msg))
-      .catch(err => alert('Error: '+err));
-  };
-  fileInput.click();
-}
+const app = express();
+const port = process.env.PORT || 3000;  // ✅ IMPORTANT CHANGE
+
+// Serve static files
+app.use(express.static(__dirname));
+
+// Upload folder setup
+const upload = multer({ dest: 'uploads/' });
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.urlencoded({ extended: true }));
+
+// Upload route
+app.post('/upload', upload.single('file'), (req, res) => {
+  const password = req.body.password;
+  if (password !== process.env.UPLOAD_PASSWORD) {
+    return res.send('Wrong password!');
+  }
+  res.send(`File uploaded: ${req.file.originalname}`);
+});
+
+// ✅ IMPORTANT: dynamic PORT for Render
+app.listen(port, () => console.log(`Server running at port ${port}`));
+
 
 </script>
 </body>
 </html>
+
 
 
 
