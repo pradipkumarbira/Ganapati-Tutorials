@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');  // ✅ Ye line add karo
+const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
@@ -6,9 +6,9 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;  // ✅ IMPORTANT CHANGE
 
-// Serve all static files (upload.html, etc.)
+// Serve static files
 app.use(express.static(__dirname));
 
 // Upload folder setup
@@ -25,4 +25,5 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.send(`File uploaded: ${req.file.originalname}`);
 });
 
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+// ✅ IMPORTANT: dynamic PORT for Render
+app.listen(port, () => console.log(`Server running at port ${port}`));
