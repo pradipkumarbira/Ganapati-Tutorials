@@ -298,26 +298,10 @@ hamburger.addEventListener('click',()=>{
   fileInput.click();
 }
 
-  async function uploadFile() {
-  const file = document.getElementById('fileInput').files[0];
-  const password = document.getElementById('passwordInput').value;
-  if (!file) return alert('Select a file!');
-
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('password', password);
-
-  const res = await fetch('/upload', { method: 'POST', body: formData });
-  const data = await res.json();
-  if (res.status !== 200) return alert(data);
-
-  alert(data.message);
-  loadFiles(); // Refresh file list
-}
-
 </script>
 </body>
 </html>
+
 
 
 
