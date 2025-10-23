@@ -153,7 +153,7 @@ footer a:hover{color:#fff;}
       <h3>୧. ଆମ ଚତୁଃପାର୍ଶ୍ଵରେ ଥିବା ପଦାର୍ଥ</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 1(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 1(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -162,7 +162,7 @@ footer a:hover{color:#fff;}
       <h3>୨. ଆମ ଚାରିପାଖରେ ଥିବା ପଦାର୍ଥ ବିଶୁଦ୍ଧ କି ?</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 2(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 2(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -171,7 +171,7 @@ footer a:hover{color:#fff;}
       <h3>୩. ପରମାଣୁ ଓ ଅଣୁ</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 3(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 3(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -180,7 +180,7 @@ footer a:hover{color:#fff;}
       <h3>୪. ପରମାଣୁ ଗଠନ</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 4(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 4(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -189,7 +189,7 @@ footer a:hover{color:#fff;}
       <h3>୫. ଗତି</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 5(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 5(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -198,7 +198,7 @@ footer a:hover{color:#fff;}
       <h3>୬. ବଳ ଓ ଗତି ନିୟମ</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 6(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 6(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -207,7 +207,7 @@ footer a:hover{color:#fff;}
       <h3>୭. ମହାକର୍ଷଣ</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 7(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 7(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -216,7 +216,7 @@ footer a:hover{color:#fff;}
       <h3>୮. କାର୍ଯ୍ୟ ଓ ଶକ୍ତି</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 8(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text"  onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 8(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -225,7 +225,7 @@ footer a:hover{color:#fff;}
       <h3>୯. ଧ୍ୱନି</h3>
       <center><button class="view" onclick="openPDF('Science Notes Chapter - 9(class9).pdf')">View</button></center>
       <div class="ud">
-        <button class="text">📤Upload</button>
+        <button class="text" onclick="uploadFile('Science Notes Chapter - 1(class9).pdf')">📤Upload</button>
         <button class="text" onclick="openPDF('Science Notes Chapter - 9(class9).pdf')">📥Download</button>
       </div>
     </div>
@@ -279,9 +279,29 @@ hamburger.addEventListener('click',()=>{
     link.click();
   }
 
+function uploadFile(filename){
+  const password = prompt("Enter upload password:");
+  if(!password) return;
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.onchange = () => {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('password', password);
+
+    fetch('/upload', { method:'POST', body: formData })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => alert('Error: '+err));
+  };
+  fileInput.click();
+}
 </script>
+
 </body>
 </html>
+
 
 
 
