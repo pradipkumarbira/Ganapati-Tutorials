@@ -279,9 +279,29 @@ hamburger.addEventListener('click',()=>{
     link.click();
   }
 
+  function uploadFile(filename){
+  const password = prompt("Enter upload password:");
+  if(!password) return;
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.onchange = () => {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('password', password);
+
+    fetch('/upload', { method:'POST', body: formData })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => alert('Error: '+err));
+  };
+  fileInput.click();
+}
+
 </script>
 </body>
 </html>
+
 
 
 
