@@ -278,54 +278,29 @@ hamburger.addEventListener('click',()=>{
     link.download = file;
     link.click();
   }
-async function uploadFile() {
-  const file = document.getElementById('fileInput').files[0];
-  const password = document.getElementById('passwordInput').value;
-  if (!file) return alert('Select a file!');
+  
+function uploadFile(filename){
+  const password = prompt("Enter upload password:");
+  if(!password) return;
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('password', password);
+  const fileInput = document.createElement('input'); // hidden file chooser
+  fileInput.type = 'file';
+  fileInput.onchange = () => {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);  // user selected file
+    formData.append('password', password);        // user entered password
 
-  const res = await fetch('/upload', { method: 'POST', body: formData });
-  const data = await res.json();
-  if (res.status !== 200) return alert(data);
-
-  alert(data.message);
-  loadFiles(); // Refresh file list
+    fetch('/upload', { method:'POST', body: formData })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => alert('Error: '+err));
+  };
+  fileInput.click();  // file chooser open kar dega
 }
-
-// Load all uploaded files dynamically
-async function loadFiles() {
-  const container = document.getElementById('filesContainer');
-  container.innerHTML = '';
-  const res = await fetch('/files');
-  const files = await res.json();
-
-  files.forEach(filename => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <span>${filename}</span>
-      <button onclick="viewFile('${filename}')">View</button>
-      <button onclick="downloadFile('${filename}')">Download</button>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function viewFile(filename) {
-  window.open(`/file/${filename}`, '_blank');
-}
-
-function downloadFile(filename) {
-  window.open(`/file/${filename}?download=true`, '_blank');
-}
-
-// Initial load
-loadFiles();
 </script>
 </body>
 </html>
+
 
 
 
