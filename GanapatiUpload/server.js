@@ -11,14 +11,14 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS for frontend requests
+// Enable CORS
 app.use(cors());
 
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Define paths
+// Paths
 const publicFolder = path.join(__dirname, 'public');
 const uploadFolder = path.join(__dirname, 'uploads');
 
@@ -48,7 +48,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   return res.json({ message: 'File uploaded successfully', filename: req.file.originalname });
 });
 
-// Serve a single file (view or download)
+// Serve single file (view/download)
 app.get('/file/:filename', (req, res) => {
   const filepath = path.join(uploadFolder, req.params.filename);
   if (!fs.existsSync(filepath)) return res.status(404).send('File not found');
@@ -56,6 +56,7 @@ app.get('/file/:filename', (req, res) => {
   if (req.query.download === 'true') {
     return res.download(filepath);
   }
+
   res.sendFile(filepath);
 });
 
@@ -67,7 +68,7 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Fallback route for React/SPA support (optional)
+// Fallback to class9(science).html
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicFolder, 'class9(science).html'));
 });
