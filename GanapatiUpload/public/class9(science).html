@@ -247,59 +247,74 @@ hamburger.addEventListener('click',()=>{
   nav.classList.toggle('active');
 });
 
-   // Toggle menu for mobile
-  function toggleMenu(){
-    document.getElementById("menuList").classList.toggle("show");
-  }
+ // ---------------- Hamburger Menu ----------------
+const hamburger = document.getElementById('hamburger');
+const nav = document.getElementById('nav-links');
 
-  // Navbar links blinking effect
-  document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', function(e) {
-      const targetId = this.getAttribute('href').substring(1); // remove #
-      const section = document.getElementById(targetId);
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  nav.classList.toggle('active');
+});
 
-      if(section){
-        section.classList.remove('blink');  // remove if already there
-        void section.offsetWidth;           // force reflow to restart animation
-        section.classList.add('blink');
-      }
-    });
+// Toggle menu for mobile (if needed)
+function toggleMenu() {
+  document.getElementById("menuList").classList.toggle("show");
+}
+
+// ---------------- Navbar Links Blinking Effect ----------------
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', function() {
+    const targetId = this.getAttribute('href').substring(1); // remove #
+    const section = document.getElementById(targetId);
+
+    if (section) {
+      section.classList.remove('blink');  // remove if already blinking
+      void section.offsetWidth;           // force reflow to restart animation
+      section.classList.add('blink');
+    }
   });
+});
 
-  // Open PDF in new tab
-  function openPDF(file){
-    window.open(file, '_blank');
-  }
+// ---------------- PDF View & Download ----------------
+// Open PDF in new tab from uploads folder
+function openPDF(file) {
+  window.open('/uploads/' + file, '_blank');
+}
 
-  // Download PDF
-  function downloadPDF(file){
-    const link = document.createElement('a');
-    link.href = file;
-    link.download = file;
-    link.click();
-  }
-  
-function uploadFile(filename){
+// Download PDF from uploads folder
+function downloadPDF(file) {
+  const link = document.createElement('a');
+  link.href = '/uploads/' + file;
+  link.download = file;
+  link.click();
+}
+
+// ---------------- Upload File with Password ----------------
+function uploadFile(filename) {
   const password = prompt("Enter upload password:");
-  if(!password) return;
+  if (!password) return;
 
   const fileInput = document.createElement('input'); // hidden file chooser
   fileInput.type = 'file';
+  
   fileInput.onchange = () => {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);  // user selected file
     formData.append('password', password);        // user entered password
 
-    fetch('/upload', { method:'POST', body: formData })
+    fetch('/upload', { method: 'POST', body: formData })
       .then(res => res.text())
       .then(msg => alert(msg))
-      .catch(err => alert('Error: '+err));
+      .catch(err => alert('Error: ' + err));
   };
-  fileInput.click();  // file chooser open kar dega
+  
+  fileInput.click();  // open file chooser
 }
+
 </script>
 </body>
 </html>
+
 
 
 
