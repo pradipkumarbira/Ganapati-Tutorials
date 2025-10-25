@@ -288,32 +288,43 @@ function downloadPDF(file){
   link.click();
 }
 
-
-// ---------------- Upload File with Password ----------------
-function uploadFile(filename) {
+function uploadFile(filename){
   const password = prompt("Enter upload password:");
-  if (!password) return;
+  if(!password) return;
 
-  const fileInput = document.createElement('input'); // hidden file chooser
+  const fileInput = document.createElement('input'); 
   fileInput.type = 'file';
-  
   fileInput.onchange = () => {
     const formData = new FormData();
-    formData.append('file', fileInput.files[0]);  // user selected file
-    formData.append('password', password);        // user entered password
+    formData.append('file', fileInput.files[0]);
+    formData.append('password', password);
 
-    fetch('/upload', { method: 'POST', body: formData })
-      .then(res => res.text())
-      .then(msg => alert(msg))
-      .catch(err => alert('Error: ' + err));
+    // Full URL for Render
+    fetch(`${window.location.origin}/upload`, { method:'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) alert(data.error);
+        else alert(data.message);
+      })
+      .catch(err => alert('Error: '+err));
   };
-  
-  fileInput.click();  // open file chooser
+  fileInput.click(); 
+}
+
+// Open PDF in new tab
+function openPDF(file){
+  window.open(`${window.location.origin}/file/${file}`, '_blank');
+}
+
+// Download PDF
+function downloadPDF(file){
+  window.open(`${window.location.origin}/file/${file}?download=true`, '_blank');
 }
 
 </script>
 </body>
 </html>
+
 
 
 
