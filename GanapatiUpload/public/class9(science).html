@@ -275,19 +275,6 @@ document.querySelectorAll('nav a').forEach(link => {
   });
 });
 
-// Open PDF in new tab
-function openPDF(file){
-  window.open('/uploads/' + file, '_blank');  // use uploads folder
-}
-
-// Download PDF
-function downloadPDF(file){
-  const link = document.createElement('a');
-  link.href = '/uploads/' + file;             // use uploads folder
-  link.download = file;
-  link.click();
-}
-
 function uploadFile(filename){
   const password = prompt("Enter upload password:");
   if(!password) return;
@@ -324,6 +311,7 @@ function downloadPDF(file){
 </script>
 </body>
 </html>
+
 
 
 
