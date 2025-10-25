@@ -275,19 +275,19 @@ document.querySelectorAll('nav a').forEach(link => {
   });
 });
 
-// ---------------- PDF View & Download ----------------
-// Open PDF in new tab from uploads folder
-function openPDF(file) {
-  window.open('/uploads/' + file, '_blank');
+// Open PDF in new tab
+function openPDF(file){
+  window.open('/uploads/' + file, '_blank');  // use uploads folder
 }
 
-// Download PDF from uploads folder
-function downloadPDF(file) {
+// Download PDF
+function downloadPDF(file){
   const link = document.createElement('a');
-  link.href = '/uploads/' + file;
+  link.href = '/uploads/' + file;             // use uploads folder
   link.download = file;
   link.click();
 }
+
 
 // ---------------- Upload File with Password ----------------
 function uploadFile(filename) {
@@ -314,6 +314,7 @@ function uploadFile(filename) {
 </script>
 </body>
 </html>
+
 
 
 
