@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Paths
 const publicFolder = path.join(__dirname, 'public');
-const uploadFolder = path.join(publicFolder, 'uploads'); // ✅ Move uploads inside public
+const uploadFolder = path.join(publicFolder, 'uploads'); // uploads inside public
 
 // Ensure uploads folder exists
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
@@ -28,7 +28,7 @@ if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 // Serve frontend files
 app.use(express.static(publicFolder));
 
-// Multer setup
+// Multer setup for uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadFolder);
@@ -39,7 +39,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ Default route - index.html first
+// ===== ROUTES =====
+
+// Default route → always serve index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicFolder, 'index.html'));
 });
@@ -61,7 +63,6 @@ app.get('/file/:filename', (req, res) => {
   if (req.query.download === 'true') {
     return res.download(filepath);
   }
-
   res.sendFile(filepath);
 });
 
@@ -73,14 +74,10 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Fallback route (optional)
+// Fallback route → 404 or invalid URLs
 app.get('*', (req, res) => {
-  res.sendFile(path.join(publicFolder, 'index.html'));
+  res.status(404).sendFile(path.join(publicFolder, 'index.html'));
 });
-
-app.use(express.static(publicFolder));
-app.get('/', (req, res) => res.sendFile(path.join(publicFolder, 'index.html')));
 
 // Start server
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
