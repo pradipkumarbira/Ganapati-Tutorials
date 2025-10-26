@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ganapati Tutorials - Modern Learning</title>
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
+body{margin: 0;padding: 0;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman';background:linear-gradient(180deg,#fdfcfb,#e2d1c3);color:#222;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;}
+button{font-family:'Poppins',sans-serif;cursor:pointer;border:none;}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
+  padding:15px 30px;background:#ffb600;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+  
+header {
+  background: linear-gradient(90deg, #b8860b, #ffbf00);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3); /* stronger shadow for depth */
+  color: #fff; /* text color for contrast */
+  font-weight: 600;
+}
+  
+.logo{display:flex;align-items:center;gap:5px;}
+.logo img{width:56px;height:56px;border-radius:50%;border:2px solid gold;box-shadow: 0 0 12px gold;object-fit: cover;text-shadow: 2px 2px 6px #000;}
+header h1{font-size:1.9rem;font-weight:700;text-shadow: 2px 2px 6px #000;}
+nav{display:flex;gap:20px;}
+nav a{font-weight:700;transition:0.3s;text-shadow: 2px 2px 6px #000;font-size:1.48rem;}
+nav a:hover{color:#ffd700;text-decoration: underline;}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger div{width:28px;height:3px;background:#fff;border-radius:2px;transition:0.4s;}
+.hamburger.open div:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open div:nth-child(2){opacity:0;}
+.hamburger.open div:nth-child(3){transform:rotate(-45deg) translate(6px,-6px);}
+
+/* HERO SECTION */
+.hero{
+  height:"";display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+  background:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1050&q=80') center/cover;
+  color:#fff;position:relative;overflow:hidden;transition: background-color 0.5s ease;
+}
+.hero::after{
+  content:'';position:absolute;width:300px;height:300px;background:rgba(255,255,255,0.15);
+  border-radius:50%;bottom:-80px;right:-80px;filter:blur(80px);
+}
+.hero img{position: absolute;top:2%;align-items:center;height:45%;width:auto;opacity:0;transform:translateY(-30px);animation:fadeIn 1s forwards;}
+.hero h2{font-size:2.7rem;font-weight:700;margin-top:20px;opacity:0;transform:translateY(-30px);animation:fadeInUp 1s forwards 0.3s;}
+.hero p{font-size:1.3rem;max-width:600px;margin-bottom:20px;text-shadow:1px 1px 3px rgba(0,0,0,0.4);opacity:0;transform:translateY(-20px);animation:fadeInUp 1s forwards 0.6s;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+
+/* ---------------- Subjects Section ---------------- */
+.subjects-section{padding:60px 20px;text-align:center;}
+.subjects-section h2{font-size:2.5rem;color:#ff7a00;margin-bottom:40px;}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;}
+.subject-card{
+  background:#fff;padding:30px 20px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  text-align:center;transition:0.4s;cursor:pointer;border-top:6px solid #ff7a00;position:relative;overflow:hidden;
+}
+.subject-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(0,0,0,0.15);}
+.subject-card h3{font-size:1.5rem;color:#ff7a00;margin-bottom:10px;}
+.subject-card p{font-size:1rem;color:#555;}
+.subject-card::after{content:'';position:absolute;width:60px;height:60px;background:#ffb600;top:-30px;right:-30px;border-radius:50%;opacity:0.3;}
+ /* From Uiverse.io by vinodjangid07 */ 
+.readmore-btn {
+  width: fit-content;
+  height: 45px;
+  width: 82%;
+  margin: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #ffb700;
+  border: none;
+  border-radius: 10px;
+  padding: 0px 15px;
+  gap: 0px;
+  transition: all 0.4s;
+}
+.book-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  width: 39px;
+  height: 100%;
+}
+.book-wrapper .book-page {
+  width: 50%;
+  height: auto;
+  position: absolute;
+}
+.readmore-btn:hover .book-page {
+  animation: paging 0.4s linear infinite;
+  transform-origin: left;
+}
+.readmore-btn:hover {
+  background-color: #865000;
+}
+@keyframes paging {
+  0% {
+    transform: rotateY(0deg) skewY(0deg);
+  }
+  50% {
+    transform: rotateY(90deg) skewY(-20deg);
+  }
+  100% {
+    transform: rotateY(180deg) skewY(0deg);
+  }
+}
+.text {
+  width: 105px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+}
+
+
+
+/* ---------------- Footer ---------------- */
+footer{
+  background:#222;color:#fff;text-align:center;padding:40px 20px;margin-top:60px;
+}
+footer p{margin:6px 0;font-size:14px;}
+footer a{color:#ffb600;margin:0 8px;transition:0.3s;}
+footer a:hover{color:#fff;}
+
+/* RESPONSIVE */
+@media(max-width:937px){
+  nav{position:absolute;top:86px;right:0;background: linear-gradient(0deg, #b8860b, #ffbf00);width:220px;flex-direction:column;padding:20px;transform:translateX(100vw);transition:0.3s;border-radius:0 5%;}
+  nav.active{transform:translateX(50%);}
+  nav a{margin:10px 0;color:#fff;font-size: 1.2rem;}
+  .hamburger{display:flex;}
+}
+@media(max-width:480px){
+  .logo {gap: 4px; margin-left: -7%;}
+  .logo img {width: 48px; height: 48px;}
+  header h1 {font-size: 1.5rem;}
+  .hamburger {margin-right: -7%;}
+  nav{top:78px;transform:translateX(100vw);}
+  nav.active{transform:translateX(50%);}
+  .hero h2{font-size:1.7rem;}
+  .hero p{font-size:0.8rem;}
+  .subjects-section h2 {font-size:2rem;margin-bottom:40px;margin-top:-26px;}
+  .readmore-btn {height: 45px;width: 39%;margin-top: 3vw;}
+}
+
+@keyframes fadeIn{
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* Blinking effect for sections */
+ .blink {
+  animation: blinkBorder 0.8s ease-in-out 3;
+}
+
+@keyframes blinkBorder {
+  0%, 100% { box-shadow: 0 0 0px gold; }
+  50% { box-shadow: 0 0 25px 8px rgba(255, 215, 0, 0.7); }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <img src="ganapati1.jpg" alt="Ganapati Tutorial Logo">
+    <h1>Ganapati Tutorials</h1>
+  </div>
+  <nav id="nav-links">
+    <a href="index.html">Back</a>
+    <a href="index.html">Home</a>
+    <a href="#subjects">Subjects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hamburger" id="hamburger"><div></div><div></div><div></div></div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <h2>Class 7 - Easy Notes</h2>
+  <p>Select a subject below to access notes and resources for Class 7.</p>
+</section>
+
+<!-- Subjects Section -->
+<section class="subjects-section" id="subjects">
+  <h2>Subjects</h2>
+  <div class="subjects">
+    <div class="subject-card">
+      <h3>Science</h3>
+      <p>Physics, Chemistry, Biology simplified notes</p>
+    <center><button class="readmore-btn" onclick="window.location.href='class9(science).html'">
+  <span class="book-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="rgb(86, 69, 117)"
+      viewBox="0 0 126 75"
+      class="book"
+    >
+      <rect
+        stroke-width="3"
+        stroke="#fff"
+        rx="7.5"
+        height="70"
+        width="121"
+        y="2.5"
+        x="2.5"
+      ></rect>
+      <line stroke-width="3" stroke="#fff" y2="75" x2="63.5" x1="63.5"></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M25 20H50"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M101 20H76"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M16 30L50 30"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M110 30L76 30"
+      ></path>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 65 75"
+      class="book-page"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M40 20H15"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M49 30L15 30"
+      ></path>
+      <path
+        stroke-width="3"
+        stroke="#fff"
+        d="M2.5 2.5H55C59.1421 2.5 62.5 5.85786 62.5 10V65C62.5 69.1421 59.1421 72.5 55 72.5H2.5V2.5Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="text"> Open </span>
+</button></center>
+    </div>
+    <div class="subject-card">
+      <h3>Mathematics</h3>
+      <p>Formulas, examples, and solved problems</p>
+      <!-- From Uiverse.io by vinodjangid07 --> 
+    <center><button class="readmore-btn">
+  <span class="book-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="rgb(86, 69, 117)"
+      viewBox="0 0 126 75"
+      class="book"
+    >
+      <rect
+        stroke-width="3"
+        stroke="#fff"
+        rx="7.5"
+        height="70"
+        width="121"
+        y="2.5"
+        x="2.5"
+      ></rect>
+      <line stroke-width="3" stroke="#fff" y2="75" x2="63.5" x1="63.5"></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M25 20H50"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M101 20H76"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M16 30L50 30"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M110 30L76 30"
+      ></path>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 65 75"
+      class="book-page"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M40 20H15"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M49 30L15 30"
+      ></path>
+      <path
+        stroke-width="3"
+        stroke="#fff"
+        d="M2.5 2.5H55C59.1421 2.5 62.5 5.85786 62.5 10V65C62.5 69.1421 59.1421 72.5 55 72.5H2.5V2.5Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="text"> Open </span>
+</button></center>
+    </div>
+    <div class="subject-card">
+      <h3>English</h3>
+      <p>Grammar rules, exercises, and literature</p>
+    <center><button class="readmore-btn">
+  <span class="book-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="rgb(86, 69, 117)"
+      viewBox="0 0 126 75"
+      class="book"
+    >
+      <rect
+        stroke-width="3"
+        stroke="#fff"
+        rx="7.5"
+        height="70"
+        width="121"
+        y="2.5"
+        x="2.5"
+      ></rect>
+      <line stroke-width="3" stroke="#fff" y2="75" x2="63.5" x1="63.5"></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M25 20H50"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M101 20H76"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M16 30L50 30"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M110 30L76 30"
+      ></path>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 65 75"
+      class="book-page"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M40 20H15"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M49 30L15 30"
+      ></path>
+      <path
+        stroke-width="3"
+        stroke="#fff"
+        d="M2.5 2.5H55C59.1421 2.5 62.5 5.85786 62.5 10V65C62.5 69.1421 59.1421 72.5 55 72.5H2.5V2.5Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="text"> Open </span>
+</button></center>
+    </div>
+    <div class="subject-card">
+      <h3>Odia</h3>
+      <p>Stories, poems, and grammar</p>
+    <center><button class="readmore-btn">
+  <span class="book-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="rgb(86, 69, 117)"
+      viewBox="0 0 126 75"
+      class="book"
+    >
+      <rect
+        stroke-width="3"
+        stroke="#fff"
+        rx="7.5"
+        height="70"
+        width="121"
+        y="2.5"
+        x="2.5"
+      ></rect>
+      <line stroke-width="3" stroke="#fff" y2="75" x2="63.5" x1="63.5"></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M25 20H50"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M101 20H76"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M16 30L50 30"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M110 30L76 30"
+      ></path>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 65 75"
+      class="book-page"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M40 20H15"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M49 30L15 30"
+      ></path>
+      <path
+        stroke-width="3"
+        stroke="#fff"
+        d="M2.5 2.5H55C59.1421 2.5 62.5 5.85786 62.5 10V65C62.5 69.1421 59.1421 72.5 55 72.5H2.5V2.5Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="text"> Open </span>
+</button></center>
+    </div>
+    <div class="subject-card">
+      <h3>Social Science</h3>
+      <p>History, Geography, Civics notes</p>
+    <center><button class="readmore-btn">
+  <span class="book-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="rgb(86, 69, 117)"
+      viewBox="0 0 126 75"
+      class="book"
+    >
+      <rect
+        stroke-width="3"
+        stroke="#fff"
+        rx="7.5"
+        height="70"
+        width="121"
+        y="2.5"
+        x="2.5"
+      ></rect>
+      <line stroke-width="3" stroke="#fff" y2="75" x2="63.5" x1="63.5"></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M25 20H50"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M101 20H76"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M16 30L50 30"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M110 30L76 30"
+      ></path>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 65 75"
+      class="book-page"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M40 20H15"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#fff"
+        d="M49 30L15 30"
+      ></path>
+      <path
+        stroke-width="3"
+        stroke="#fff"
+        d="M2.5 2.5H55C59.1421 2.5 62.5 5.85786 62.5 10V65C62.5 69.1421 59.1421 72.5 55 72.5H2.5V2.5Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="text"> Open </span>
+</button></center>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer id="contact">
+  <p>&copy; 2025 Ganapati Tutorial. All Rights Reserved.</p>
+  <p>Follow us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">YouTube</a></p>
+</footer>
+
+<script>
+const hamburger=document.getElementById('hamburger');
+const nav=document.getElementById('nav-links');
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('open');
+  nav.classList.toggle('active');
+});
+
+   // Toggle menu for mobile
+  function toggleMenu(){
+    document.getElementById("menuList").classList.toggle("show");
+  }
+
+  // Navbar links blinking effect
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href').substring(1); // remove #
+      const section = document.getElementById(targetId);
+
+      if(section){
+        section.classList.remove('blink');  // remove if already there
+        void section.offsetWidth;           // force reflow to restart animation
+        section.classList.add('blink');
+      }
+    });
+  });
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
