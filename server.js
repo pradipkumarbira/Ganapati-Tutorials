@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Paths
 const publicFolder = path.join(__dirname, 'public');
-const uploadFolder = path.join(publicFolder, 'uploads'); // uploads inside public
+const uploadFolder = path.join(publicFolder, 'uploads'); // Uploads inside public
 
 // Ensure uploads folder exists
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
@@ -30,12 +30,8 @@ app.use(express.static(publicFolder));
 
 // Multer setup for uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadFolder);
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
+  destination: (req, file, cb) => cb(null, uploadFolder),
+  filename: (req, file, cb) => cb(null, file.originalname),
 });
 const upload = multer({ storage });
 
@@ -63,6 +59,7 @@ app.get('/file/:filename', (req, res) => {
   if (req.query.download === 'true') {
     return res.download(filepath);
   }
+
   res.sendFile(filepath);
 });
 
@@ -74,9 +71,9 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Fallback route → 404 or invalid URLs
+// Fallback route → send index.html for any unknown route
 app.get('*', (req, res) => {
-  res.status(404).sendFile(path.join(publicFolder, 'index.html'));
+  res.sendFile(path.join(publicFolder, 'index.html'));
 });
 
 // Start server
