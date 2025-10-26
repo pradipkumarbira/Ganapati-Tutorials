@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Paths
 const publicFolder = path.join(__dirname, 'public');
-const uploadFolder = path.join(__dirname, 'uploads');
+const uploadFolder = path.join(publicFolder, 'uploads'); // ✅ Move uploads inside public
 
 // Ensure uploads folder exists
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
@@ -38,6 +38,11 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+
+// ✅ Default route - index.html first
+app.get('/', (req, res) => {
+  res.sendFile(path.join(publicFolder, 'index.html'));
+});
 
 // Upload API
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -68,9 +73,9 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Fallback to class9(science).html
+// Fallback route (optional)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(publicFolder, 'class9(science).html'));
+  res.sendFile(path.join(publicFolder, 'index.html'));
 });
 
 // Start server
