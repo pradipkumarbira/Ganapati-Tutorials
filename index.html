@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ganapati Tutorials - Modern Learning</title>
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
+body{margin: 0;padding: 0;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman';background:linear-gradient(180deg,#fdfcfb,#e2d1c3);color:#222;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;}
+button{font-family:'Poppins',sans-serif;cursor:pointer;border:none;}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
+  padding:15px 30px;background:#ffb600;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+  
+header {
+  background: linear-gradient(90deg, #b8860b, #ffbf00);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3); /* stronger shadow for depth */
+  color: #fff; /* text color for contrast */
+  font-weight: 600;
+}
+  
+.logo{display:flex;align-items:center;gap:5px;}
+.logo img{width:56px;height:56px;border-radius:50%;border:2px solid gold;box-shadow: 0 0 12px gold;object-fit: cover;text-shadow: 2px 2px 6px #000;}
+header h1{font-size:1.9rem;font-weight:700;text-shadow: 2px 2px 6px #000;}
+nav{display:flex;gap:20px;}
+nav a{font-weight:700;transition:0.3s;text-shadow: 2px 2px 6px #000;font-size:1.48rem;}
+nav a:hover{color:#ffd700;text-decoration: underline;}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger div{width:28px;height:3px;background:#fff;border-radius:2px;transition:0.4s;}
+.hamburger.open div:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open div:nth-child(2){opacity:0;}
+.hamburger.open div:nth-child(3){transform:rotate(-45deg) translate(6px,-6px);}
+
+/* HERO SECTION */
+.hero{
+  height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+  background:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1050&q=80') center/cover;
+  color:#fff;position:relative;overflow:hidden;transition: background-color 0.5s ease;
+}
+.hero::after{
+  content:'';position:absolute;width:300px;height:300px;background:rgba(255,255,255,0.15);
+  border-radius:50%;bottom:-80px;right:-80px;filter:blur(80px);
+}
+.hero img{position: absolute;top:2%;align-items:center;height:45%;width:auto;opacity:0;transform:translateY(-20px);animation:fadeIn 1s forwards;}
+.hero h2{font-size:4rem;font-weight:700;margin-bottom:15px;opacity:0;transform:translateY(-20px);animation:fadeIn 1s 0.3s forwards;text-shadow:2px 2px 6px rgba(0,0,0,0.5);display:flex;flex-direction:row;justify-content:center;align-items:center;gap:12px;}
+.hero p{font-size:1.2rem;max-width:600px;margin-bottom:20px;text-shadow:1px 1px 3px rgba(0,0,0,0.4);opacity:0;transform:translateY(-20px);animation:fadeIn 1s 0.5s forwards;}
+.hero button{padding:15px 35px;background:#fff;color:#ff7a00;border-radius:50px;font-size:1rem;font-weight:600;transition:0.3s;opacity:0;transform:translateY(20px);animation:fadeIn 1s 1s forwards;}
+.hero button:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(255,211,105,0.5);}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+.notice-board{
+  background: linear-gradient(90deg, #b8860b, #ffbf00);
+  color: #fff;
+  text-align: center;
+  padding: 20px 15px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(255,165,0,0.4);
+  margin: 30px auto;
+  max-width: 900px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+.notice-board h2{
+  margin-bottom: 10px;
+  font-size: 1.7rem;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+}
+
+.notice-container{
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+  overflow: hidden;
+}
+
+.notice-container marquee{
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+/* PRINCIPAL MESSAGE */
+.principal-message{
+  margin:70px auto;padding:60px 30px;max-width:900px;background:#fff5e6;border-left:8px solid #ff7a00;
+  border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.principal-message h3{font-size:1.8rem;color:#ff7a00;margin-bottom:15px;}
+.principal-message p{font-size:1.1rem;color:#333;line-height:1.7;}
+.principal-img{width:100px;height:100px;border-radius:50%;border:3px solid #ff7a00;margin-bottom:20px;}
+
+/* CLASSES SECTION */
+.classes-section{padding:80px 20px;text-align:center;}
+.classes-section h2{font-size:2.5rem;color:#ff7a00;margin-bottom:40px;}
+.classes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
+.class-card{
+  background:#fff;padding:40px 25px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  transition:0.4s;cursor:pointer;position:relative;overflow:hidden;border-top:6px solid #ff7a00;
+}
+.class-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(0,0,0,0.15);}
+.class-card h3{font-size:1.5rem;color:#ff7a00;margin-bottom:10px;}
+.class-card p{font-size:1rem;color:#555;}
+.class-card button{background:#ffb700;color:#fff;border:none;padding:10px 39px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer;margin:5px;transition:0.3s, transform 0.3s;margin-top:3%;}
+.class-card button:hover{background:#865000;transform:scale(1.05);}
+.class-card::after{
+  content:'';position:absolute;width:80px;height:80px;background:#ffb600;top:-40px;right:-40px;border-radius:50%;opacity:0.3;
+}
+  
+/* FOOTER */
+footer{
+  background:#222;color:#fff;text-align:center;padding:50px 20px;margin-top:60px;
+}
+footer p{margin:8px 0;font-size:15px;}
+footer a{color:#ffb600;margin:0 8px;font-weight:500;transition:0.3s;}
+footer a:hover{color:#fff;}
+
+/* RESPONSIVE */
+@media(max-width:937px){
+  nav{position:absolute;top:86px;right:0;background: linear-gradient(0deg, #b8860b, #ffbf00);width:220px;flex-direction:column;padding:20px;transform:translateX(100vw);transition:0.3s;border-radius:0 5%;}
+  nav.active{transform:translateX(50%);}
+  nav a{margin:10px 0;color:#fff;font-size: 1.2rem;}
+  .hamburger{display:flex;}
+  #home h2{font-size:3.2rem;flex-direction:column;gap:0;}
+  #home p{font-size:1.2rem;}
+  #home img{height:32%;width:auto;top:10%;}
+}
+  
+@media(max-width:480px){
+  .logo {gap: 4px; margin-left: -7%;}
+  .logo img {width: 48px; height: 48px;}
+  header h1 {font-size: 1.5rem;}
+  .hamburger {margin-right: -7%;}
+  nav{top:78px;transform:translateX(100vw);}
+  nav.active{transform:translateX(50%);}
+  #home h2{font-size:2.3rem;flex-direction:column;gap:0;}
+  #home p{font-size:1rem;}
+  #home img{height:31%;width:auto;top:10%;}
+  .principal-message{padding:40px 20px;font-size:1rem;}
+  .classes-section h2{font-size:2rem;margin-top:-80px;}
+}
+
+@keyframes fadeIn{
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* Blinking effect for sections */
+ .blink {
+  animation: blinkBorder 0.8s ease-in-out 3;
+}
+
+@keyframes blinkBorder {
+  0%, 100% { box-shadow: 0 0 0px gold; }
+  50% { box-shadow: 0 0 25px 8px rgba(255, 215, 0, 0.7); }
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img src="ganapati1.jpg" alt="Ganapati Tutorial Logo">
+    <h1>Ganapati Tutorials</h1>
+  </div>
+  <nav id="nav-links">
+    <a href="#home">Home</a>
+    <a href="#notice">Notices</a>
+    <a href="#about">About</a>
+    <a href="#classes">Classes</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hamburger" id="hamburger"><div></div><div></div><div></div></div>
+</header>
+
+<section class="hero" id="home">
+  <img src="ganapati2.jpg">
+  <h2><div>Welcome To</div> <div>Ganapati Tutorials</div></h2>
+  <p>Class 8 • Class 9 • Class 10 — Easy notes, simple explanations, and guidance for everyone.</p>
+  <button onclick="document.querySelector('.classes-section').scrollIntoView({behavior:'smooth'})">Explore Classes</button>
+</section>
+
+<!-- NOTICE BOARD -->
+<div class="notice-board" id="notice">
+  <h2>📢 Latest Notices</h2>
+  <div class="notice-container">
+    <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">
+      🔸 Admission open for Class 8, 9, and 10 for 2025 session!  
+      🔸 Download the latest notes from the 'Classes' section.  
+      🔸 Regular test series begins from 1st November 2025.  
+      🔸 Follow us on YouTube for daily video lessons!  
+    </marquee>
+  </div>
+</div>
+
+<section class="principal-message" id="about">
+  <center>
+    <img src="principal.jpg" class="principal-img" alt="Principal">
+    <h3>Principal - Shri Pradeep Kumar Bira</h3>
+  </center>
+  <p>Dear Students,<br><br>Education is the foundation of life. At Ganapati Tutorials, we aim to make learning simple, clear, and enjoyable. We are always here to support you in your journey of knowledge and growth.</p>
+</section>
+
+<section class="classes-section" id="classes">
+  <h2>Our Classes</h2>
+  <div class="classes">
+    <div class="class-card">
+      <h3>Class 3</h3>
+      <p>Easy and fun notes — simple and engaging to learn.</p>
+    <center><button onclick="window.location.href='class3.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 4</h3>
+      <p>Short tips and tricks to remember quickly.</p>
+    <center><button onclick="window.location.href='class4.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 5</h3>
+      <p>Simple explanations and examples for each chapter.</p>
+    <center><button onclick="window.location.href='class5.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 6</h3>
+      <p>Practice problems, tips, and tricks for quick exam revision.</p>
+    <center><button onclick="window.location.href='class6.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 7</h3>
+      <p>Formulas, graphs, and solved questions to prepare for exams.</p>
+    <center><button onclick="window.location.href='class7.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 8</h3>
+      <p>Detailed explanations and examples for each chapter.</p>
+    <center><button onclick="window.location.href='class8.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 9</h3>
+      <p>Interactive exercises and real-life examples for effective learning.</p>
+    <center><button onclick="window.location.href='class9.html'">Click</button></center>
+    </div>
+    <div class="class-card">
+      <h3>Class 10</h3>
+      <p>Step-by-step guides and illustrations for better understanding.</p>
+      <center><button onclick="window.location.href='class10.html'">Click</button></center>
+    </div>
+  </div>
+</section>
+
+<section class="horizontal-gallery">
+  <h2>📸 Ganapati Tutorials Gallery</h2>
+  <div class="scroll-wrapper">
+    <div class="scroll-content">
+      <img src="images/class1.jpg" alt="Class 1">
+      <img src="images/event1.jpg" alt="Event 1">
+      <img src="images/prayer.jpg" alt="Prayer">
+      <img src="images/teacher.jpg" alt="Teacher">
+      <img src="images/award.jpg" alt="Award">
+      <img src="images/friends.jpg" alt="Friends">
+      <!-- Duplicate for seamless infinite scroll -->
+      <img src="images/class1.jpg" alt="Class 1">
+      <img src="images/event1.jpg" alt="Event 1">
+      <img src="images/prayer.jpg" alt="Prayer">
+      <img src="images/teacher.jpg" alt="Teacher">
+      <img src="images/award.jpg" alt="Award">
+      <img src="images/friends.jpg" alt="Friends">
+    </div>
+  </div>
+</section>
+
+<style>
+.horizontal-gallery {
+  padding: 50px 20px;
+  background: linear-gradient(90deg, #fff8ef, #fff2de); /* soft warm background */
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  border-top: 4px solid #ffb700;
+  border-bottom: 4px solid #ffb700;
+}
+
+.horizontal-gallery h2 {
+  color: #ff7a00; /* Ganapati orange */
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-shadow: 2px 2px 5px rgba(255,165,0,0.5);
+}
+
+.scroll-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.scroll-content {
+  display: flex;
+  gap: 25px;
+  animation: scrollInfinite 25s linear infinite;
+}
+
+.scroll-content img {
+  height: 220px;
+  border-radius: 15px;
+  border: 3px solid #ffd700; /* golden border */
+  box-shadow: 0 8px 20px rgba(255,165,0,0.3); /* soft orange shadow */
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.scroll-content img:hover {
+  transform: scale(1.18);
+  box-shadow: 0 12px 30px rgba(255,165,0,0.6); /* stronger hover glow */
+}
+
+@keyframes scrollInfinite {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 600px) {
+  .scroll-content img { height: 140px; }
+  .horizontal-gallery h2 { font-size: 1.5rem; }
+}
+</style>
+
+
+<footer id="contact">
+  <p>&copy; 2025 Ganapati Tutorial. All Rights Reserved.</p>
+  <p>Follow us on <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">YouTube</a></p>
+  <p><a href="contact.html">Contact Us</a></p>
+</footer>
+
+<script>
+const hamburger=document.getElementById('hamburger');
+const nav=document.getElementById('nav-links');
+hamburger.addEventListener('click',()=>{
+  hamburger.classList.toggle('open');
+  nav.classList.toggle('active');
+});
+
+   // Toggle menu for mobile
+  function toggleMenu(){
+    document.getElementById("menuList").classList.toggle("show");
+  }
+
+  // Navbar links blinking effect
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href').substring(1); // remove #
+      const section = document.getElementById(targetId);
+
+      if(section){
+        section.classList.remove('blink');  // remove if already there
+        void section.offsetWidth;           // force reflow to restart animation
+        section.classList.add('blink');
+      }
+    });
+  });
+
+</script>
+</body>
+</html>
