@@ -240,14 +240,7 @@ footer a:hover{color:#fff;}
 </footer>
 
 <script>
-const hamburger=document.getElementById('hamburger');
-const nav=document.getElementById('nav-links');
-hamburger.addEventListener('click',()=>{
-  hamburger.classList.toggle('open');
-  nav.classList.toggle('active');
-});
-
- // ---------------- Hamburger Menu ----------------
+// ---------------- Hamburger Menu ----------------
 const hamburger = document.getElementById('hamburger');
 const nav = document.getElementById('nav-links');
 
@@ -255,11 +248,6 @@ hamburger.addEventListener('click', () => {
   hamburger.classList.toggle('open');
   nav.classList.toggle('active');
 });
-
-// Toggle menu for mobile (if needed)
-function toggleMenu() {
-  document.getElementById("menuList").classList.toggle("show");
-}
 
 // ---------------- Navbar Links Blinking Effect ----------------
 document.querySelectorAll('nav a').forEach(link => {
@@ -275,42 +263,47 @@ document.querySelectorAll('nav a').forEach(link => {
   });
 });
 
-function uploadFile(filename){
+// ---------------- File Upload Function ----------------
+function uploadFile(filename) {
   const password = prompt("Enter upload password:");
-  if(!password) return;
+  if (!password) return;
 
-  const fileInput = document.createElement('input'); 
+  const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.onchange = () => {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
     formData.append('password', password);
+    formData.append('filename', filename); // added to keep filename info
 
-    // Full URL for Render
-    fetch(`${window.location.origin}/upload`, { method:'POST', body: formData })
-      .then(res => res.json())
-      .then(data => {
-        if(data.error) alert(data.error);
-        else alert(data.message);
-      })
-      .catch(err => alert('Error: '+err));
+    fetch('/upload', { 
+      method: 'POST', 
+      body: formData 
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) alert(data.error);
+      else alert(data.message);
+    })
+    .catch(err => alert('Error: ' + err));
   };
-  fileInput.click(); 
+  fileInput.click();
 }
 
-// Open PDF in new tab
-function openPDF(file){
-  window.open(`${window.location.origin}/file/${file}`, '_blank');
+// ---------------- Open PDF ----------------
+function openPDF(file) {
+  window.open(`/file/${file}`, '_blank');
 }
 
-// Download PDF
-function downloadPDF(file){
-  window.open(`${window.location.origin}/file/${file}?download=true`, '_blank');
+// ---------------- Download PDF ----------------
+function downloadPDF(file) {
+  window.open(`/file/${file}?download=true`, '_blank');
 }
 
 </script>
 </body>
 </html>
+
 
 
 
