@@ -252,12 +252,11 @@ hamburger.addEventListener('click', () => {
 // ---------------- Navbar Links Blinking Effect ----------------
 document.querySelectorAll('nav a').forEach(link => {
   link.addEventListener('click', function() {
-    const targetId = this.getAttribute('href').substring(1); // remove #
+    const targetId = this.getAttribute('href').substring(1);
     const section = document.getElementById(targetId);
-
     if (section) {
-      section.classList.remove('blink');  // remove if already blinking
-      void section.offsetWidth;           // force reflow to restart animation
+      section.classList.remove('blink');
+      void section.offsetWidth;
       section.classList.add('blink');
     }
   });
@@ -274,18 +273,15 @@ function uploadFile(filename) {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
     formData.append('password', password);
-    formData.append('filename', filename); // added to keep filename info
+    formData.append('filename', filename);
 
-    fetch('/upload', { 
-      method: 'POST', 
-      body: formData 
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) alert(data.error);
-      else alert(data.message);
-    })
-    .catch(err => alert('Error: ' + err));
+    fetch('/upload', { method: 'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) alert(data.error);
+        else alert(data.message);
+      })
+      .catch(err => alert('Error: ' + err));
   };
   fileInput.click();
 }
@@ -299,10 +295,11 @@ function openPDF(file) {
 function downloadPDF(file) {
   window.open(`/file/${file}?download=true`, '_blank');
 }
-
 </script>
+
 </body>
 </html>
+
 
 
 
