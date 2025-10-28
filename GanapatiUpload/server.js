@@ -58,20 +58,36 @@ app.post('/upload', upload.single('file'), (req, res) => {
 // ✅ Serve a specific file (view/download)
 app.get('/file/:filename', (req, res) => {
   const filepath = path.join(uploadFolder, req.params.filename);
+
   if (!fs.existsSync(filepath)) return res.status(404).send('File not found');
 
+  // Download if ?download=true
   if (req.query.download === 'true') {
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.filename}"`);
     return res.download(filepath);
   }
 
-  res.sendFile(filepath);
+  // Otherwise open in browser
+  res.sendFile(filepath, err => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(500).send('Error opening file');
+    }
+  });
 });
 
-// ✅ List all uploaded files
+// ✅ List all uploaded files (important for frontend display)
 app.get('/files', (req, res) => {
   fs.readdir(uploadFolder, (err, files) => {
     if (err) return res.status(500).json({ error: 'Server error' });
-    res.json(files);
+
+    const fileList = files.map(file => ({
+      name: file,
+      viewUrl: `/file/${encodeURIComponent(file)}`,
+      downloadUrl: `/file/${encodeURIComponent(file)}?download=true`
+    }));
+
+    res.json(fileList);
   });
 });
 
