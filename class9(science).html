@@ -274,6 +274,8 @@ function uploadFile(filename) {
     formData.append('file', fileInput.files[0]);
     formData.append('password', password);
     formData.append('filename', filename);
+    formData.append('className', 'Class9');  // ✅ add this
+    formData.append('subjectName', 'Science'); // ✅ add this
 
     fetch('/upload', { method: 'POST', body: formData })
       .then(res => res.json())
@@ -288,17 +290,21 @@ function uploadFile(filename) {
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  window.open(`/file/${file}`, '_blank');
+  // ✅ Corrected: add class + subject path
+  window.open(`/file/Class9/Science/${encodeURIComponent(file)}`, '_blank');
 }
 
 // ---------------- Download PDF ----------------
 function downloadPDF(file) {
-  window.open(`/file/${file}?download=true`, '_blank');
+  // ✅ Corrected: add class + subject path
+  window.open(`/file/Class9/Science/${encodeURIComponent(file)}?download=true`, '_blank');
 }
 </script>
 
+
 </body>
 </html>
+
 
 
 
