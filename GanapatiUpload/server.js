@@ -18,40 +18,44 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Paths
-const publicFolder = path.join(__dirname, 'public');
-const uploadFolder = path.join(publicFolder, 'uploads'); // Uploads inside public
+// ✅ Paths (IMPORTANT FIX)
+const rootFolder = path.join(__dirname, '..'); // one level up from GanapatiUpload
+const uploadFolder = path.join(rootFolder, 'uploads'); // uploads directly inside main project
 
-// Ensure uploads folder exists
-if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
+// ✅ Ensure uploads folder exists (with recursive)
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder, { recursive: true });
+  console.log('Uploads folder created at:', uploadFolder);
+}
 
-// Serve frontend files
-app.use(express.static(publicFolder));
+// ✅ Serve all frontend files (your HTMLs in root)
+app.use(express.static(rootFolder));
 
-// Multer setup for uploads
+// ✅ Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadFolder),
-  filename: (req, file, cb) => cb(null, file.originalname),
+  filename: (req, file, cb) => {
+    const customName = req.body.filename || file.originalname;
+    cb(null, customName);
+  },
 });
 const upload = multer({ storage });
 
 // ===== ROUTES =====
 
-// Default route → always serve index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(publicFolder, 'index.html'));
-});
-
-// Upload API
+// ✅ Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
   const password = req.body.password;
   if (password !== process.env.UPLOAD_PASSWORD) {
     return res.status(401).json({ error: 'Wrong password!' });
   }
-  return res.json({ message: 'File uploaded successfully', filename: req.file.originalname });
+  return res.json({
+    message: 'File uploaded successfully',
+    filename: req.file.filename,
+  });
 });
 
-// Serve single file (view/download)
+// ✅ Serve a specific file (view/download)
 app.get('/file/:filename', (req, res) => {
   const filepath = path.join(uploadFolder, req.params.filename);
   if (!fs.existsSync(filepath)) return res.status(404).send('File not found');
@@ -63,7 +67,7 @@ app.get('/file/:filename', (req, res) => {
   res.sendFile(filepath);
 });
 
-// List all uploaded files
+// ✅ List all uploaded files
 app.get('/files', (req, res) => {
   fs.readdir(uploadFolder, (err, files) => {
     if (err) return res.status(500).json({ error: 'Server error' });
@@ -71,10 +75,15 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Fallback route → send index.html for any unknown route
+// ✅ Default fallback (serve index.html if available)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(publicFolder, 'index.html'));
+  const indexPath = path.join(rootFolder, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.send('Server running. No index.html found.');
+  }
 });
 
-// Start server
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// ✅ Start server
+app.listen(port, () => console.log(`✅ Server running on port ${port}`));
