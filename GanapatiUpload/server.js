@@ -1,80 +1,98 @@
-// server.js
+// ✅ server.js (GanapatiUpload/server.js)
 const dotenv = require('dotenv');
-dotenv.config();
-
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 
+// Load .env variables
+dotenv.config();
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS
+// ✅ Enable CORS and body parsing
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Define folders
-const rootFolder = path.join(__dirname, '..'); // root of your project
-const uploadFolder = path.join(__dirname, 'uploads'); // keep uploads in same folder as server.js
+// ✅ Define folder paths
+const rootFolder = path.join(__dirname, '..');         // → Ganapati-Tutorials (frontend)
+const uploadFolder = path.join(__dirname, 'uploads');  // → GanapatiUpload/uploads
 
-// ✅ Ensure uploads folder exists
+// ✅ Ensure 'uploads' folder exists
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
-  console.log('Uploads folder created at:', uploadFolder);
+  console.log('📁 Uploads folder created at:', uploadFolder);
 }
 
-// ✅ Make uploads folder publicly accessible
+// ✅ Make uploads publicly accessible
 app.use('/uploads', express.static(uploadFolder));
 
-// ✅ Serve frontend files
+// ✅ Serve all frontend files (like index.html, upload.html)
 app.use(express.static(rootFolder));
 
-// ✅ Multer setup
+// ✅ Configure Multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadFolder),
   filename: (req, file, cb) => {
-    const customName = req.body.filename || file.originalname;
+    // Optional: add timestamp to avoid duplicate name conflicts
+    const timestamp = Date.now();
+    const originalName = path.basename(file.originalname);
+    const customName = req.body.filename || `${timestamp}_${originalName}`;
     cb(null, customName);
   },
 });
+
 const upload = multer({ storage });
 
-// ✅ Upload route
+// ✅ UPLOAD API (with password protection)
 app.post('/upload', upload.single('file'), (req, res) => {
-  const password = req.body.password;
-  if (password !== process.env.UPLOAD_PASSWORD) {
-    return res.status(401).json({ error: 'Wrong password!' });
+  try {
+    const password = req.body.password;
+    if (password !== process.env.UPLOAD_PASSWORD) {
+      return res.status(401).json({ error: '❌ Wrong password!' });
+    }
+
+    return res.json({
+      message: '✅ File uploaded successfully!',
+      filename: req.file.filename,
+      viewUrl: `/file/${encodeURIComponent(req.file.filename)}`,
+      downloadUrl: `/file/${encodeURIComponent(req.file.filename)}?download=true`,
+    });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Server error during upload.' });
   }
-  return res.json({
-    message: 'File uploaded successfully',
-    filename: req.file.filename,
-  });
 });
 
-// ✅ View / Download route
+// ✅ VIEW or DOWNLOAD API
 app.get('/file/:filename', (req, res) => {
-  const filePath = path.join(uploadFolder, req.params.filename);
+  try {
+    const filePath = path.join(uploadFolder, req.params.filename);
 
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).send('File not found');
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send('❌ File not found');
+    }
+
+    if (req.query.download === 'true') {
+      // Trigger file download
+      return res.download(filePath);
+    }
+
+    // View file in browser (for PDFs, images, etc.)
+    return res.sendFile(filePath);
+  } catch (err) {
+    console.error('File view/download error:', err);
+    res.status(500).send('Error accessing file.');
   }
-
-  // For download
-  if (req.query.download === 'true') {
-    return res.download(filePath);
-  }
-
-  // For view in browser
-  return res.sendFile(filePath);
 });
 
-// ✅ List all uploaded files (optional)
+// ✅ FILE LIST API (optional)
 app.get('/files', (req, res) => {
   fs.readdir(uploadFolder, (err, files) => {
-    if (err) return res.status(500).json({ error: 'Server error' });
+    if (err) return res.status(500).json({ error: 'Server error while listing files.' });
 
     const fileList = files.map(file => ({
       name: file,
@@ -86,15 +104,17 @@ app.get('/files', (req, res) => {
   });
 });
 
-// ✅ Default fallback
+// ✅ FALLBACK for unknown routes
 app.get('*', (req, res) => {
   const indexPath = path.join(rootFolder, 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.send('Server running. No index.html found.');
+    res.send('✅ Server is running — index.html not found.');
   }
 });
 
-// ✅ Start server
-app.listen(port, () => console.log(`✅ Server running on port ${port}`));
+// ✅ Start the Server
+app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+
+ye sahi hai to
