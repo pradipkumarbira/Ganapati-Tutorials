@@ -1,3 +1,6 @@
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 // server.js
 const dotenv = require('dotenv');
 dotenv.config();
@@ -103,3 +106,4 @@ app.get('*', (req, res) => {
 
 // ✅ Start server
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
+
