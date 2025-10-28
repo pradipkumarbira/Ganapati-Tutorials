@@ -21,54 +21,60 @@ app.use(express.urlencoded({ extended: true }));
 const rootFolder = path.join(__dirname, ".."); // → Ganapati-Tutorials
 const uploadFolder = path.join(__dirname, "uploads"); // → GanapatiUpload/uploads
 
-// ✅ Ensure 'uploads' base folder exists
+// ✅ Ensure uploads folder exists
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
   console.log("📁 Created uploads folder at:", uploadFolder);
 }
 
-// ✅ Make uploads public
+// ✅ Serve uploads publicly
 app.use("/uploads", express.static(uploadFolder));
 app.use(express.static(rootFolder));
 
-// ✅ Configure Multer for dynamic subfolders (class + subject)
+// ✅ Multer setup (creates subfolders based on class + subject)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const className = req.body.className || "General";
-    const subjectName = req.body.subjectName || "Misc";
+    const className = req.body.className?.trim() || "General";
+    const subjectName = req.body.subjectName?.trim() || "Misc";
 
     const folderPath = path.join(uploadFolder, className, subjectName);
-    fs.mkdirSync(folderPath, { recursive: true }); // Auto create subfolders
+    fs.mkdirSync(folderPath, { recursive: true }); // ensure folders exist
 
     cb(null, folderPath);
   },
   filename: (req, file, cb) => {
-    const timestamp = Date.now();
     const originalName = path.basename(file.originalname);
-    const customName = req.body.filename || `${timestamp}_${originalName}`;
-    cb(null, customName);
+    const timestamp = Date.now();
+    cb(null, `${timestamp}_${originalName}`);
   },
 });
 
 const upload = multer({ storage });
 
-// ✅ UPLOAD API (with password)
+// ✅ Upload API (with password)
 app.post("/upload", upload.single("file"), (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "❌ No file received." });
+    }
+
     const password = req.body.password;
     if (password !== process.env.UPLOAD_PASSWORD) {
+      fs.unlinkSync(req.file.path); // delete uploaded file if wrong password
       return res.status(401).json({ error: "❌ Wrong password!" });
     }
 
     const className = req.body.className || "General";
     const subjectName = req.body.subjectName || "Misc";
     const fileName = req.file.filename;
-    const filePath = `/uploads/${encodeURIComponent(className)}/${encodeURIComponent(subjectName)}/${encodeURIComponent(fileName)}`;
 
-    return res.json({
+    const viewUrl = `/file/${encodeURIComponent(className)}/${encodeURIComponent(subjectName)}/${encodeURIComponent(fileName)}`;
+    const downloadUrl = `${viewUrl}?download=true`;
+
+    res.json({
       message: "✅ File uploaded successfully!",
-      viewUrl: `/file/${className}/${subjectName}/${encodeURIComponent(fileName)}`,
-      downloadUrl: `/file/${className}/${subjectName}/${encodeURIComponent(fileName)}?download=true`,
+      viewUrl,
+      downloadUrl,
     });
   } catch (err) {
     console.error("Upload error:", err);
@@ -76,7 +82,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
   }
 });
 
-// ✅ VIEW / DOWNLOAD API
+// ✅ View / Download API
 app.get("/file/:className/:subjectName/:filename", (req, res) => {
   try {
     const { className, subjectName, filename } = req.params;
@@ -97,7 +103,7 @@ app.get("/file/:className/:subjectName/:filename", (req, res) => {
   }
 });
 
-// ✅ Optional API — list all uploaded files
+// ✅ Optional — List all uploaded files
 app.get("/files", (req, res) => {
   const result = [];
 
@@ -110,11 +116,17 @@ app.get("/files", (req, res) => {
       if (stats.isDirectory()) {
         walkDir(fullPath, relPath);
       } else {
-        result.push({
-          name: relPath,
-          viewUrl: `/file/${relPath.replace(/\\/g, "/")}`,
-          downloadUrl: `/file/${relPath.replace(/\\/g, "/")}?download=true`,
-        });
+        const parts = relPath.split(path.sep);
+        if (parts.length >= 3) {
+          const [className, subjectName, fileName] = parts;
+          result.push({
+            name: fileName,
+            className,
+            subjectName,
+            viewUrl: `/file/${className}/${subjectName}/${fileName}`,
+            downloadUrl: `/file/${className}/${subjectName}/${fileName}?download=true`,
+          });
+        }
       }
     }
   }
@@ -123,13 +135,13 @@ app.get("/files", (req, res) => {
   res.json(result);
 });
 
-// ✅ Fallback for frontend routes
+// ✅ Fallback for frontend
 app.get("*", (req, res) => {
   const indexPath = path.join(rootFolder, "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.send("✅ Server is running but index.html not found.");
+    res.send("✅ Server running, but index.html not found.");
   }
 });
 
