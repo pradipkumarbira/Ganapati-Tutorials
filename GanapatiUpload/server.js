@@ -1,4 +1,8 @@
-// ✅ server.js (updated)
+// =======================
+//    Ganapati Tutorials
+//        server.js
+// =======================
+
 const dotenv = require("dotenv");
 const express = require("express");
 const multer = require("multer");
@@ -15,66 +19,88 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Root and Upload folders
+// =======================
+// Correct folder structure
+// =======================
+
+// Root project folder (Ganapati-Tutorials)
 const rootFolder = path.join(__dirname, "..");
+
+// Upload folder (GanapatiUpload/uploads)
 const uploadFolder = path.join(__dirname, "uploads");
 
-// Ensure uploads folder exists
+// Create uploads folder if missing
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
   console.log("📁 Created uploads folder:", uploadFolder);
 }
 
-// Serve static files
-app.use("/uploads", express.static(uploadFolder));
+// Serve uploaded files
+// Example URL:
+// /GanapatiUpload/uploads/Class 10/Maths/file.pdf
+app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
+
+// Serve static frontend files (index.html, classes folder, images etc)
 app.use(express.static(rootFolder));
 
-// Multer setup
+// =======================
+// Multer storage settings
+// =======================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const className = req.body.className?.trim() || "General";
     const subjectName = req.body.subjectName?.trim() || "Misc";
+
     const folderPath = path.join(uploadFolder, className, subjectName);
 
     fs.mkdirSync(folderPath, { recursive: true });
     console.log(`📂 Uploading to: ${folderPath}`);
+
     cb(null, folderPath);
   },
+
   filename: (req, file, cb) => {
     const timestamp = Date.now();
-    const originalName = path.basename(file.originalname);
-    const newName = `${timestamp}_${originalName}`;
-    cb(null, newName);
-  },
+    const original = path.basename(file.originalname);
+    cb(null, `${timestamp}_${original}`);
+  }
 });
 
 const upload = multer({ storage });
 
-// Upload route
+// =======================
+// Upload Route
+// =======================
 app.post("/upload", upload.single("file"), (req, res) => {
-  const password = req.body.password;
-  if (password !== process.env.UPLOAD_PASSWORD) {
+
+  // Password check
+  if (req.body.password !== process.env.UPLOAD_PASSWORD) {
     return res.status(401).json({ error: "❌ Wrong password" });
   }
 
   const { className = "General", subjectName = "Misc" } = req.body;
   const fileName = req.file.filename;
 
-  const viewUrl = `/file/${className}/${subjectName}/${encodeURIComponent(fileName)}`;
-  const downloadUrl = `${viewUrl}?download=true`;
+  const baseUrl = `/GanapatiUpload/uploads/${className}/${subjectName}/${encodeURIComponent(fileName)}`;
+
+  const viewUrl = baseUrl;
+  const downloadUrl = `${baseUrl}?download=true`;
 
   console.log(`✅ Uploaded: ${fileName} → ${className}/${subjectName}`);
 
   res.json({
     message: "✅ File uploaded successfully!",
     viewUrl,
-    downloadUrl,
+    downloadUrl
   });
 });
 
-// File View/Download
-app.get("/file/:className/:subjectName/:filename", (req, res) => {
+// =======================
+// View or Download File
+// =======================
+app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) => {
   const { className, subjectName, filename } = req.params;
+
   const filePath = path.join(uploadFolder, className, subjectName, filename);
 
   if (!fs.existsSync(filePath)) {
@@ -82,15 +108,20 @@ app.get("/file/:className/:subjectName/:filename", (req, res) => {
   }
 
   if (req.query.download === "true") {
-    res.download(filePath);
-  } else {
-    res.sendFile(filePath);
+    return res.download(filePath);
   }
+
+  return res.sendFile(filePath);
 });
 
-// Default route
+// =======================
+// Default route (index.html)
+// =======================
 app.get("*", (req, res) => {
   res.sendFile(path.join(rootFolder, "index.html"));
 });
 
-app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+// Start server
+app.listen(port, () => {
+  console.log(`🚀 Server running on port ${port}`);
+});
