@@ -290,20 +290,20 @@ function uploadFile(filename) {
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  // ✅ Corrected: add class + subject path
-  window.open(`/file/Class9/Science/${encodeURIComponent(file)}`, '_blank');
+  window.open(`/uploads/Class9/Science/${encodeURIComponent(file)}`, "_blank");
 }
 
 // ---------------- Download PDF ----------------
 function downloadPDF(file) {
-  // ✅ Corrected: add class + subject path
-  window.open(`/file/Class9/Science/${encodeURIComponent(file)}?download=true`, '_blank');
+  window.open(`/uploads/Class9/Science/${encodeURIComponent(file)}?download=true`, "_blank");
 }
+
 </script>
 
 
 </body>
 </html>
+
 
 
 
