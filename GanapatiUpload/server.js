@@ -1,63 +1,47 @@
+// =======================
+//    Ganapati Tutorials
+//        server.js
+// =======================
+
+const dotenv = require("dotenv");
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
 
+dotenv.config();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MAIN uploads folder
+// =======================
+// Correct folder structure
+// =======================
+
+// Root project folder (Ganapati-Tutorials)
+const rootFolder = path.join(__dirname, "..");
+
+// Upload folder (GanapatiUpload/uploads)
 const uploadFolder = path.join(__dirname, "uploads");
 
 // Create uploads folder if missing
 if (!fs.existsSync(uploadFolder)) {
-    fs.mkdirSync(uploadFolder);
+  fs.mkdirSync(uploadFolder, { recursive: true });
+  console.log("📁 Created uploads folder:", uploadFolder);
 }
 
-// Multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const folderName = req.body.folderName || "general";
-
-        const folderPath = path.join(uploadFolder, folderName);
-
-        if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath, { recursive: true });
-        }
-
-        cb(null, folderPath);
-    },
-
-    filename: (req, file, cb) => {
-        const customName = req.body.filename;
-        const ext = path.extname(file.originalname);
-
-        cb(null, customName + ext);
-    }
-});
-
-const upload = multer({ storage });
-
-// Upload route
-app.post("/upload", upload.single("file"), (req, res) => {
-    if (req.body.password !== "12345") {
-        return res.json({ error: "Wrong password!" });
-    }
-
-    res.json({ message: "File uploaded successfully!" });
-});
-
 // Serve uploaded files
-app.use("/uploads", express.static(uploadFolder));
+// Example URL:
+// /GanapatiUpload/uploads/Class 10/Maths/file.pdf
+app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
 
-app.listen(port, () => {
-    console.log("Server running on port", port);
-});
+// Serve static frontend files (index.html, classes folder, images etc)
+app.use(express.static(rootFolder));
 
 // =======================
 // Multer storage settings
@@ -141,4 +125,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
-
