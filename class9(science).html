@@ -240,6 +240,11 @@ footer a:hover{color:#fff;}
 </footer>
 
 <script>
+
+// ---------------- PAGE NAME AUTO DETECT ----------------
+let pageName = window.location.pathname.split("/").pop().split(".")[0];
+// Example: class9 -> class9 folder me save hoga
+
 // ---------------- Hamburger Menu ----------------
 const hamburger = document.getElementById('hamburger');
 const nav = document.getElementById('nav-links');
@@ -269,40 +274,40 @@ function uploadFile(filename) {
 
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
+
   fileInput.onchange = () => {
     const formData = new FormData();
+
     formData.append('file', fileInput.files[0]);
     formData.append('password', password);
     formData.append('filename', filename);
-    formData.append('className', 'Class9');  // ✅ add this
-    formData.append('subjectName', 'Science'); // ✅ add this
+    formData.append('folderName', pageName);   // 🔥 AUTO FOLDER NAME
 
     fetch('/upload', { method: 'POST', body: formData })
       .then(res => res.json())
-      .then(data => {
-        if (data.error) alert(data.error);
-        else alert(data.message);
-      })
+      .then(data => alert(data.message || data.error))
       .catch(err => alert('Error: ' + err));
   };
+
   fileInput.click();
 }
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  window.open(`/uploads/Class9/Science/${encodeURIComponent(file)}`, "_blank");
+  window.open(`/uploads/${pageName}/${encodeURIComponent(file)}`, "_blank");
 }
 
 // ---------------- Download PDF ----------------
 function downloadPDF(file) {
-  window.open(`/uploads/Class9/Science/${encodeURIComponent(file)}?download=true`, "_blank");
+  window.open(`/uploads/${pageName}/${encodeURIComponent(file)}?download=true`, "_blank");
 }
 
 </script>
-
+  
 
 </body>
 </html>
+
 
 
 
