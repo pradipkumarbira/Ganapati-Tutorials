@@ -1,5 +1,5 @@
 // =======================
-//    Ganapati Tutorials
+//     Ganapati Tutorials
 //        server.js
 // =======================
 
@@ -14,28 +14,30 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// =======================
 // Middleware
+// =======================
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // =======================
-// Folder Paths
+// Folder Setup
 // =======================
 
-// uploads folder inside GanapatiUpload/
+// uploads folder
 const uploadFolder = path.join(__dirname, "uploads");
 
-// Create uploads folder if missing
+// create uploads folder if not exists
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
   console.log("📁 Created uploads folder:", uploadFolder);
 }
 
-// Serve uploaded files
+// static serve
 app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
 
-// Serve frontend pages
+// frontend root
 const rootFolder = path.join(__dirname, "..");
 app.use(express.static(rootFolder));
 
@@ -44,13 +46,14 @@ app.use(express.static(rootFolder));
 // =======================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const className = req.body.className?.trim() || "General";
-    const subjectName = req.body.subjectName?.trim() || "Misc";
+    const className = (req.body.className || "General").trim();
+    const subjectName = (req.body.subjectName || "Misc").trim();
 
     const folderPath = path.join(uploadFolder, className, subjectName);
 
+    // create class/subject folder if missing
     fs.mkdirSync(folderPath, { recursive: true });
-    console.log(`📂 Uploading to: ${folderPath}`);
+    console.log(`📂 Uploading To: ${folderPath}`);
 
     cb(null, folderPath);
   },
@@ -68,24 +71,26 @@ const upload = multer({ storage });
 // Upload Route
 // =======================
 app.post("/upload", upload.single("file"), (req, res) => {
+  // password check
   if (req.body.password !== process.env.UPLOAD_PASSWORD) {
     return res.status(401).json({ error: "❌ Wrong password" });
   }
 
-  const { className = "General", subjectName = "Misc" } = req.body;
+  const className = req.body.className || "General";
+  const subjectName = req.body.subjectName || "Misc";
   const fileName = req.file.filename;
 
-  const baseUrl = `/GanapatiUpload/uploads/${className}/${subjectName}/${encodeURIComponent(fileName)}`;
+  const filePath = `/GanapatiUpload/uploads/${className}/${subjectName}/${encodeURIComponent(fileName)}`;
 
   res.json({
     message: "✅ File uploaded successfully!",
-    viewUrl: baseUrl,
-    downloadUrl: `${baseUrl}?download=true`
+    viewUrl: filePath,
+    downloadUrl: `${filePath}?download=true`
   });
 });
 
 // =======================
-// View or Download File
+// View / Download Files
 // =======================
 app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) => {
   const { className, subjectName, filename } = req.params;
@@ -104,13 +109,15 @@ app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) 
 });
 
 // =======================
-// Default Route
+// SPA Default Route
 // =======================
 app.get("*", (req, res) => {
   res.sendFile(path.join(rootFolder, "index.html"));
 });
 
+// =======================
 // Start Server
+// =======================
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
