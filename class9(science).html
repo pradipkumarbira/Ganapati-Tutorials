@@ -243,29 +243,6 @@ footer a:hover{color:#fff;}
 
 // ---------------- PAGE NAME AUTO DETECT ----------------
 let pageName = window.location.pathname.split("/").pop().split(".")[0];
-// Example: class9 -> class9 folder me save hoga
-
-// ---------------- Hamburger Menu ----------------
-const hamburger = document.getElementById('hamburger');
-const nav = document.getElementById('nav-links');
-
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  nav.classList.toggle('active');
-});
-
-// ---------------- Navbar Links Blinking Effect ----------------
-document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', function() {
-    const targetId = this.getAttribute('href').substring(1);
-    const section = document.getElementById(targetId);
-    if (section) {
-      section.classList.remove('blink');
-      void section.offsetWidth;
-      section.classList.add('blink');
-    }
-  });
-});
 
 // ---------------- File Upload Function ----------------
 function uploadFile(filename) {
@@ -281,7 +258,10 @@ function uploadFile(filename) {
     formData.append('file', fileInput.files[0]);
     formData.append('password', password);
     formData.append('filename', filename);
-    formData.append('folderName', pageName);   // 🔥 AUTO FOLDER NAME
+
+    // 🔥 CORRECT — backend expects className + subjectName
+    formData.append('className', pageName);
+    formData.append('subjectName', 'Science');
 
     fetch('/upload', { method: 'POST', body: formData })
       .then(res => res.json())
@@ -294,19 +274,27 @@ function uploadFile(filename) {
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  window.open(`/uploads/${pageName}/${encodeURIComponent(file)}`, "_blank");
+  window.open(
+    `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}`,
+    "_blank"
+  );
 }
 
 // ---------------- Download PDF ----------------
 function downloadPDF(file) {
-  window.open(`/uploads/${pageName}/${encodeURIComponent(file)}?download=true`, "_blank");
+  window.open(
+    `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}?download=true`,
+    "_blank"
+  );
 }
-
+  
+  
 </script>
   
 
 </body>
 </html>
+
 
 
 
