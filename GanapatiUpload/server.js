@@ -1,120 +1,56 @@
-// =======================
-//     Ganapati Tutorials
-//        server.js
-// =======================
+// Example server.js for Ganapati Tutorials
+// Adjust paths as needed
 
-const dotenv = require("dotenv");
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const cors = require("cors");
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = 5000;
 
-// =======================
-// Middleware
-// =======================
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// =======================
-// Folder Setup
-// =======================
-const uploadFolder = path.join(__dirname, "uploads");
-
-if (!fs.existsSync(uploadFolder)) {
-  fs.mkdirSync(uploadFolder, { recursive: true });
-  console.log("📁 Created uploads folder:", uploadFolder);
+// Create uploads folder if missing
+const uploadPath = path.join(__dirname, 'GanapatiUpload');
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
 }
 
-// static serve
-app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
-
-// frontend root
-const rootFolder = path.join(__dirname, "..");
-app.use(express.static(rootFolder));
-
-// =======================
-// Multer Storage
-// =======================
+// Multer storage setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const className = (req.body.className || "General").trim();
-    const subjectName = (req.body.subjectName || "Misc").trim();
-
-    const folderPath = path.join(uploadFolder, className, subjectName);
-
-    fs.mkdirSync(folderPath, { recursive: true });
-    console.log(`📂 Uploading To: ${folderPath}`);
-
-    cb(null, folderPath);
+  destination: function (req, file, cb) {
+    cb(null, uploadPath);
   },
-
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const original = path.basename(file.originalname);
-    cb(null, `${timestamp}_${original}`);
-  }
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
-// =======================
-// Upload Route
-// =======================
-app.post("/upload", upload.single("file"), (req, res) => {
+// For JSON
+app.use(express.json());
+app.use('/GanapatiUpload', express.static(uploadPath));
 
-  if (req.body.password !== process.env.UPLOAD_PASSWORD) {
-    return res.status(401).json({ error: "❌ Wrong password" });
+// Upload API
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
   }
-
-  const className = req.body.className;
-  const subjectName = req.body.subjectName;
-  const fileName = req.file.filename;
-
-  const fullPath = `/GanapatiUpload/uploads/${className}/${subjectName}/${fileName}`;
-
   res.json({
-    message: "✅ File uploaded successfully!",
-    viewUrl: fullPath,
-    downloadUrl: `${fullPath}?download=true`,
-    savedFileName: fileName
+    message: 'File uploaded successfully',
+    fileUrl: `/GanapatiUpload/${req.file.filename}`,
   });
 });
 
-// =======================
-// View / Download Files
-// =======================
-app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) => {
-  const { className, subjectName, filename } = req.params;
-
-  const filePath = path.join(uploadFolder, className, subjectName, filename);
-
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).send("❌ File not found");
-  }
-
-  if (req.query.download === "true") {
-    return res.download(filePath);
-  }
-
-  res.sendFile(filePath);
+// View files API
+app.get('/files', (req, res) => {
+  fs.readdir(uploadPath, (err, files) => {
+    if (err) return res.status(500).json({ error: 'Error reading files' });
+    const fileList = files.map(f => ({ name: f, url: `/GanapatiUpload/${f}` }));
+    res.json(fileList);
+  });
 });
 
-// =======================
-// SPA Route
-// =======================
-app.get("*", (req, res) => {
-  res.sendFile(path.join(rootFolder, "index.html"));
-});
-
-// =======================
-// Start Server
-// =======================
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
