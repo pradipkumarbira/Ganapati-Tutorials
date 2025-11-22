@@ -1,56 +1,105 @@
-// Example server.js for Ganapati Tutorials
-// Adjust paths as needed
+// =======================
+//     Ganapati Tutorials
+//        server.js
+// =======================
 
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const dotenv = require("dotenv");
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const cors = require("cors");
 
+dotenv.config();
 const app = express();
-const PORT = 5000;
+const port = process.env.PORT || 3000;
 
-// Create uploads folder if missing
-const uploadPath = path.join(__dirname, 'GanapatiUpload');
-if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath);
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Upload folder
+const uploadFolder = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder, { recursive: true });
 }
 
-// Multer storage setup
+// Static serve
+app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
+
+// Frontend root
+const rootFolder = path.join(__dirname, "..");
+app.use(express.static(rootFolder));
+
+// =========================
+// Multer Storage
+// =========================
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
+    destination: (req, file, cb) => {
+        const className = (req.body.className || "General").trim();
+        const subjectName = (req.body.subjectName || "Misc").trim();
+
+        const folderPath = path.join(uploadFolder, className, subjectName);
+        fs.mkdirSync(folderPath, { recursive: true });
+
+        cb(null, folderPath);
+    },
+
+    filename: (req, file, cb) => {
+        const timestamp = Date.now();
+        const original = file.originalname;
+        cb(null, `${timestamp}_${original}`);
+    }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
-// For JSON
-app.use(express.json());
-app.use('/GanapatiUpload', express.static(uploadPath));
+// =========================
+// Upload Route
+// =========================
+app.post("/upload", upload.single("file"), (req, res) => {
+    if (req.body.password !== process.env.UPLOAD_PASSWORD) {
+        return res.status(401).json({ error: "❌ Wrong password" });
+    }
 
-// Upload API
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
-  res.json({
-    message: 'File uploaded successfully',
-    fileUrl: `/GanapatiUpload/${req.file.filename}`,
-  });
+    const className = req.body.className || "General";
+    const subjectName = req.body.subjectName || "Misc";
+    const fileName = req.file.filename;
+
+    const fileUrl = `/GanapatiUpload/uploads/${className}/${subjectName}/${fileName}`;
+
+    res.json({
+        message: "✅ File uploaded successfully!",
+        viewUrl: fileUrl,
+        downloadUrl: `${fileUrl}?download=true`
+    });
 });
 
-// View files API
-app.get('/files', (req, res) => {
-  fs.readdir(uploadPath, (err, files) => {
-    if (err) return res.status(500).json({ error: 'Error reading files' });
-    const fileList = files.map(f => ({ name: f, url: `/GanapatiUpload/${f}` }));
-    res.json(fileList);
-  });
+// =========================
+// View / Download Files
+// =========================
+app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) => {
+    const { className, subjectName, filename } = req.params;
+
+    const filePath = path.join(uploadFolder, className, subjectName, filename);
+
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).send("❌ File not found");
+    }
+
+    if (req.query.download === "true") {
+        return res.download(filePath);
+    }
+
+    res.sendFile(filePath);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// SPA Fallback
+app.get("*", (req, res) => {
+    res.sendFile(path.join(rootFolder, "index.html"));
+});
+
+app.listen(port, () => {
+    console.log(`🚀 Server running on port ${port}`);
 });
