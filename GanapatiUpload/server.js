@@ -24,11 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 // =======================
 // Folder Setup
 // =======================
-
-// uploads folder
 const uploadFolder = path.join(__dirname, "uploads");
 
-// create uploads folder if not exists
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
   console.log("📁 Created uploads folder:", uploadFolder);
@@ -51,7 +48,6 @@ const storage = multer.diskStorage({
 
     const folderPath = path.join(uploadFolder, className, subjectName);
 
-    // create class/subject folder if missing
     fs.mkdirSync(folderPath, { recursive: true });
     console.log(`📂 Uploading To: ${folderPath}`);
 
@@ -71,21 +67,22 @@ const upload = multer({ storage });
 // Upload Route
 // =======================
 app.post("/upload", upload.single("file"), (req, res) => {
-  // password check
+
   if (req.body.password !== process.env.UPLOAD_PASSWORD) {
     return res.status(401).json({ error: "❌ Wrong password" });
   }
 
-  const className = req.body.className || "General";
-  const subjectName = req.body.subjectName || "Misc";
+  const className = req.body.className;
+  const subjectName = req.body.subjectName;
   const fileName = req.file.filename;
 
-  const filePath = `/GanapatiUpload/uploads/${className}/${subjectName}/${encodeURIComponent(fileName)}`;
+  const fullPath = `/GanapatiUpload/uploads/${className}/${subjectName}/${fileName}`;
 
   res.json({
     message: "✅ File uploaded successfully!",
-    viewUrl: filePath,
-    downloadUrl: `${filePath}?download=true`
+    viewUrl: fullPath,
+    downloadUrl: `${fullPath}?download=true`,
+    savedFileName: fileName
   });
 });
 
@@ -109,7 +106,7 @@ app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) 
 });
 
 // =======================
-// SPA Default Route
+// SPA Route
 // =======================
 app.get("*", (req, res) => {
   res.sendFile(path.join(rootFolder, "index.html"));
