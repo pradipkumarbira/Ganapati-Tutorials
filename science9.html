@@ -242,10 +242,10 @@ footer a:hover{color:#fff;}
 <script>
 
 // ---------------- PAGE NAME AUTO DETECT ----------------
-const pageName = "Class9";
+const pageName = "Class9";   // Correct folder name
 
 // ---------------- File Upload Function ----------------
-function uploadFile(filename) {
+function uploadFile() {
   const password = prompt("Enter upload password:");
   if (!password) return;
 
@@ -255,17 +255,18 @@ function uploadFile(filename) {
   fileInput.onchange = () => {
     const formData = new FormData();
 
-    formData.append('file', fileInput.files[0]);
+    formData.append('file', fileInput.files[0]); // actual file
     formData.append('password', password);
-    formData.append('filename', filename);
 
-    // 🔥 CORRECT — backend expects className + subjectName
+    // backend ke hisab se required fields
     formData.append('className', pageName);
     formData.append('subjectName', 'Science');
 
     fetch('/upload', { method: 'POST', body: formData })
       .then(res => res.json())
-      .then(data => alert(data.message || data.error))
+      .then(data => {
+        alert(data.message || data.error);
+      })
       .catch(err => alert('Error: ' + err));
   };
 
@@ -274,26 +275,23 @@ function uploadFile(filename) {
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  window.open(
-    `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}`,
-    "_blank"
-  );
+  const url = `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}`;
+  window.open(url, "_blank");
 }
 
 // ---------------- Download PDF ----------------
 function downloadPDF(file) {
-  window.open(
-    `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}?download=true`,
-    "_blank"
-  );
+  const url = `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}?download=true`;
+  window.open(url, "_blank");
 }
-  
-  
+
 </script>
+
   
 
 </body>
 </html>
+
 
 
 
