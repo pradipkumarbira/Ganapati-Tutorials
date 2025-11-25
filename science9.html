@@ -275,13 +275,13 @@ function uploadFile() {
 
 // ---------------- Open PDF ----------------
 function openPDF(file) {
-  const url = `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}`;
+  const url = `/uploads/${pageName}/Science/${encodeURIComponent(file)}`;
   window.open(url, "_blank");
 }
 
 // ---------------- Download PDF ----------------
-function downloadPDF(file) {
-  const url = `/GanapatiUpload/uploads/${pageName}/Science/${encodeURIComponent(file)}?download=true`;
+function openPDF(file) {
+  const url = `/uploads/${pageName}/Science/${encodeURIComponent(file)}`;
   window.open(url, "_blank");
 }
 
@@ -291,6 +291,7 @@ function downloadPDF(file) {
 
 </body>
 </html>
+
 
 
 
