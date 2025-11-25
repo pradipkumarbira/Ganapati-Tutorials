@@ -29,8 +29,8 @@ if (!fs.existsSync(uploadFolder)) {
     fs.mkdirSync(uploadFolder, { recursive: true });
 }
 
-// Static file serving
-app.use("/GanapatiUpload/uploads", express.static(uploadFolder));
+// Serve uploads correctly (fixed)
+app.use("/uploads", express.static(uploadFolder));
 
 // Frontend root folder
 const rootFolder = path.join(__dirname, "..");
@@ -41,8 +41,9 @@ app.use(express.static(rootFolder));
 // =======================
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const className = (req.body.className || "General").trim();
-        const subjectName = (req.body.subjectName || "Misc").trim();
+        // Sanitized folder names
+        const className = (req.body.className || "General").trim().replace(/\s+/g, "_");
+        const subjectName = (req.body.subjectName || "Misc").trim().replace(/\s+/g, "_");
 
         const folderPath = path.join(uploadFolder, className, subjectName);
         fs.mkdirSync(folderPath, { recursive: true });
@@ -52,8 +53,9 @@ const storage = multer.diskStorage({
 
     filename: (req, file, cb) => {
         const timestamp = Date.now();
-        const original = file.originalname;
-        cb(null, `${timestamp}_${original}`);
+        const ext = path.extname(file.originalname);
+        const cleanName = path.basename(file.originalname, ext).replace(/\s+/g, "_");
+        cb(null, `${timestamp}_${cleanName}${ext}`);
     }
 });
 
@@ -67,11 +69,11 @@ app.post("/upload", upload.single("file"), (req, res) => {
         return res.status(401).json({ error: "❌ Wrong password" });
     }
 
-    const className = req.body.className || "General";
-    const subjectName = req.body.subjectName || "Misc";
+    const className = (req.body.className || "General").trim().replace(/\s+/g, "_");
+    const subjectName = (req.body.subjectName || "Misc").trim().replace(/\s+/g, "_");
     const fileName = req.file.filename;
 
-    const fileUrl = `/GanapatiUpload/uploads/${className}/${subjectName}/${fileName}`;
+    const fileUrl = `/uploads/${className}/${subjectName}/${fileName}`;
 
     res.json({
         message: "✅ File uploaded successfully!",
@@ -83,7 +85,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
 // =======================
 // File View / Download
 // =======================
-app.get("/GanapatiUpload/uploads/:className/:subjectName/:filename", (req, res) => {
+app.get("/uploads/:className/:subjectName/:filename", (req, res) => {
     const { className, subjectName, filename } = req.params;
 
     const filePath = path.join(uploadFolder, className, subjectName, filename);
